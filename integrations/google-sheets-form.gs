@@ -18,7 +18,9 @@
  */
 
 const SHEET_NAME = "Messages";
-const NOTIFY_EMAIL = "ali.asgherr20@gmail.com"; // set to "" to turn off email notifications
+// Every enquiry is emailed here. Works from any Google account: the email is sent by whoever deployed
+// the script, to this address. Set to "" to turn notifications off.
+const NOTIFY_EMAIL = "asvakamalak@gmail.com";
 
 // Keep in sync with LIMITS in src/components/Contact.tsx
 const MAX_NAME = 100;
@@ -59,7 +61,7 @@ function doPost(e) {
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(["Received", "Name", "Email", "Message", "Page", "Status"]);
       sheet.setFrozenRows(1);
-      sheet.getRange(1, 1, 1, 6).setFontWeight("bold").setBackground("#0b0b0c").setFontColor("#f2f1ed");
+      sheet.getRange(1, 1, 1, 6).setFontWeight("bold").setBackground("#1a120d").setFontColor("#f8f3ea");
       sheet.setColumnWidth(4, 420);
     }
     sheet.appendRow([new Date(), cell(name), cell(email), cell(message), cell(page), "New"]);
@@ -119,7 +121,7 @@ function notificationHtml(name, email, message, page) {
     '<div style="font-family:Arial,sans-serif;max-width:560px">' +
     '<h2 style="margin:0 0 12px">New message from your portfolio</h2>' +
     "<p><b>Name:</b> " + escapeHtml(name) + "<br><b>Email:</b> " + escapeHtml(email) + "</p>" +
-    '<p style="white-space:pre-wrap;background:#f2f1ed;padding:14px;border-radius:8px">' + escapeHtml(message) + "</p>" +
+    '<p style="white-space:pre-wrap;background:#f8f3ea;padding:14px;border-radius:8px">' + escapeHtml(message) + "</p>" +
     '<p style="color:#888;font-size:12px">Sent from ' + escapeHtml(page) + ". Reply to this email to answer them directly.</p>" +
     "</div>"
   );

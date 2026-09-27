@@ -152,15 +152,15 @@ export default function DataField({ count = 3000 }: { count?: number }) {
         uScroll: { value: 0 },
         uPixelRatio: { value: 1 }, // set from the renderer each frame
         uMouse: { value: new THREE.Vector2(99, 99) },
-        uColor: { value: new THREE.Color("#e9e6df") },
-        uAccent: { value: new THREE.Color("#ff4a1c") },
+        uColor: { value: new THREE.Color("#f1e4cf") },
+        uAccent: { value: new THREE.Color("#d4a066") },
       },
     });
     return { shellGeo, ringGeo, nodeGeo, linkGeo, material };
   }, [count]);
 
   const lineMat = useMemo(() => new THREE.LineBasicMaterial({ color: "#ffffff", transparent: true, opacity: 0.1, depthWrite: false }), []);
-  const nodeMat = useMemo(() => new THREE.PointsMaterial({ color: "#ff4a1c", size: 0.06, transparent: true, depthWrite: false }), []);
+  const nodeMat = useMemo(() => new THREE.PointsMaterial({ color: "#e6c79c", size: 0.06, transparent: true, depthWrite: false }), []);
 
   useFrame((state, dt) => {
     const u = material.uniforms;

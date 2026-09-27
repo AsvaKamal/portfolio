@@ -76,9 +76,9 @@ export default function HeroScene({ active, onReady }: Props) {
 
       <ambientLight intensity={0.35} />
       <directionalLight position={[-3, 4, 5]} intensity={2.2} color="#fff4ea" />
-      {/* orange rim light from behind: separates the silhouette from the dark background */}
-      <directionalLight position={[3, 2, -4]} intensity={3.5} color="#ff4a1c" />
-      <directionalLight position={[-4, 0, -3]} intensity={1.2} color="#6f8cff" />
+      {/* warm bronze rim light from behind: separates the silhouette from the dark background */}
+      <directionalLight position={[3, 2, -4]} intensity={3.5} color="#d9a066" />
+      <directionalLight position={[-4, 0, -3]} intensity={1.2} color="#f3dcc0" />
 
       <Workstation />
       <group position={[0, -0.35, 0]}>

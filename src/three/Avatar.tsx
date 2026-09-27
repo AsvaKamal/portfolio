@@ -1,19 +1,11 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { pointer, stage, smooth, lerp, screen, typing } from "./shared";
+import { HijabDrape, HijabiHead, Limb, Torso, useCharacterMaterials, type CharacterMats } from "./Hijabi";
+import { makeGlowTexture } from "./textures";
 
-/**
- * Set to a .glb path (e.g. "/models/avatar.glb") to use a real avatar instead of the
- * procedural one. Compress it first:  npx @gltf-transform/cli optimize in.glb out.glb --compress meshopt --texture-compress webp
- */
-export const AVATAR_URL: string | null = null;
-const HEAD_BONE_NAMES = ["Head", "head", "mixamorigHead", "Neck", "spine006"];
-
-const SKIN = "#d9a47f";
-const HAIR = "#17120f";
-const TOP = "#26262b";
-const ACCENT = new THREE.Color("#ff4a1c");
+const ACCENT = new THREE.Color("#d4a066");
 const tmpColor = new THREE.Color();
 
 /** Ease-out with a small overshoot, for things popping into place. */
@@ -42,58 +34,28 @@ function useHeadFollow(head: React.RefObject<THREE.Object3D | null>) {
   });
 }
 
-/** A capsule stretched between two points (arms). */
-function Limb({ from, to, r, material }: { from: THREE.Vector3; to: THREE.Vector3; r: number; material: THREE.Material }) {
-  const ref = useRef<THREE.Mesh>(null);
-  const len = from.distanceTo(to);
-  useLayoutEffect(() => {
-    const m = ref.current!;
-    m.position.copy(from).lerp(to, 0.5);
-    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), to.clone().sub(from).normalize());
-  }, [from, to]);
-  return (
-    <mesh ref={ref} material={material}>
-      <capsuleGeometry args={[r, len, 6, 16]} />
-    </mesh>
-  );
-}
-
 function useMaterials() {
   return useMemo(
     () => ({
-      skin: new THREE.MeshStandardMaterial({ color: SKIN, roughness: 0.6 }),
-      hair: new THREE.MeshStandardMaterial({ color: HAIR, roughness: 0.85, side: THREE.DoubleSide }),
-      top: new THREE.MeshStandardMaterial({ color: TOP, roughness: 0.9 }),
-      collar: new THREE.MeshStandardMaterial({ color: "#34343a", roughness: 0.9 }),
-      dark: new THREE.MeshStandardMaterial({ color: "#0d0d0f", roughness: 0.3 }),
-      frame: new THREE.MeshStandardMaterial({ color: "#111", roughness: 0.25, metalness: 0.4 }),
-      lens: new THREE.MeshStandardMaterial({ color: "#ff4a1c", emissive: "#ff4a1c", emissiveIntensity: 0.25, transparent: true, opacity: 0.18, roughness: 0.1 }),
-      lid: new THREE.MeshStandardMaterial({ color: "#3a3b41", roughness: 0.4, metalness: 0.7 }),
-      logo: new THREE.MeshBasicMaterial({ color: "#ff4a1c" }),
-      desk: new THREE.MeshStandardMaterial({ color: "#2a211c", roughness: 0.55, metalness: 0.05 }),
-      mat: new THREE.MeshStandardMaterial({ color: "#121214", roughness: 0.95 }),
-      bezel: new THREE.MeshStandardMaterial({ color: "#2a2b31", roughness: 0.45, metalness: 0.55, side: THREE.DoubleSide }),
-      metal: new THREE.MeshStandardMaterial({ color: "#2c2d33", roughness: 0.3, metalness: 0.8 }),
-      kbBase: new THREE.MeshStandardMaterial({ color: "#1a1a1e", roughness: 0.5, metalness: 0.4 }),
+      lid: new THREE.MeshStandardMaterial({ color: "#8a6a4e", roughness: 0.35, metalness: 0.75 }),
+      logo: new THREE.MeshBasicMaterial({ color: "#f1e2c8" }),
+      desk: new THREE.MeshStandardMaterial({ color: "#3a2a1f", roughness: 0.5, metalness: 0.05 }),
+      mat: new THREE.MeshStandardMaterial({ color: "#1c140f", roughness: 0.95 }),
+      bezel: new THREE.MeshStandardMaterial({ color: "#2e231b", roughness: 0.45, metalness: 0.55, side: THREE.DoubleSide }),
+      metal: new THREE.MeshStandardMaterial({ color: "#6b5440", roughness: 0.3, metalness: 0.8 }),
+      kbBase: new THREE.MeshStandardMaterial({ color: "#241a14", roughness: 0.5, metalness: 0.4 }),
     }),
     []
   );
 }
 type Mats = ReturnType<typeof useMaterials>;
 
-function ProceduralAvatar({ mats }: { mats: Mats }) {
+function ProceduralAvatar({ mats }: { mats: CharacterMats }) {
   const body = useRef<THREE.Group>(null);
   const head = useRef<THREE.Group>(null);
   const eyes = useRef<THREE.Group>(null);
   const hands = useRef<(THREE.Mesh | null)[]>([]);
   useHeadFollow(head);
-
-  const torsoGeo = useMemo(() => {
-    const pts = [
-      [0, -1.9], [1.05, -1.9], [1.12, -1.3], [1.1, -0.75], [0.98, -0.35], [0.7, -0.08], [0.32, 0.04], [0, 0.06],
-    ].map(([x, y]) => new THREE.Vector2(x, y));
-    return new THREE.LatheGeometry(pts, 48);
-  }, []);
 
   // shoulder → elbow → hand, resting on the keyboard / laptop
   const arms = useMemo(
@@ -135,10 +97,7 @@ function ProceduralAvatar({ mats }: { mats: Mats }) {
 
   return (
     <group ref={body}>
-      <mesh geometry={torsoGeo} material={mats.top} scale={[1, 1, 0.58]} />
-      <mesh material={mats.collar} position={[0, 0.02, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 0.8, 1]}>
-        <torusGeometry args={[0.27, 0.07, 12, 32]} />
-      </mesh>
+      <Torso mats={mats} />
       {arms.map((a, i) => (
         <group key={a.s}>
           <Limb from={a.shoulder} to={a.elbow} r={0.14} material={mats.top} />
@@ -155,69 +114,8 @@ function ProceduralAvatar({ mats }: { mats: Mats }) {
           </mesh>
         </group>
       ))}
-      <mesh material={mats.skin} position={[0, 0.14, 0]}>
-        <cylinderGeometry args={[0.16, 0.19, 0.32, 24]} />
-      </mesh>
-
-      {/* head: pivots at the top of the neck */}
-      <group ref={head} position={[0, 0.22, 0]}>
-        <mesh material={mats.skin} position={[0, 0.45, 0]} scale={[0.86, 1.08, 0.95]}>
-          <sphereGeometry args={[0.5, 48, 32]} />
-        </mesh>
-        {/* Hair: one shell in the head's own (scaled) space, 5% larger, so it can never intersect the
-            skin. Rotating a sphere cap inside that space only moves its edge: tilted back to show the
-            forehead, twisted slightly for a side-swept hairline. */}
-        <group position={[0, 0.45, 0]} scale={[0.86 * 1.05, 1.08 * 1.05, 0.95 * 1.05]}>
-          <mesh material={mats.hair} rotation={[-0.78, 0.28, 0.14]}>
-            <sphereGeometry args={[0.5, 56, 32, 0, Math.PI * 2, 0, Math.PI * 0.53]} />
-          </mesh>
-          {/* soft fringe: a thin slice of a slightly larger sphere along the front hairline */}
-          <mesh material={mats.hair} rotation={[-0.2, 0.35, 0.3]}>
-            <sphereGeometry args={[0.515, 40, 8, Math.PI / 2 - 0.75, 1.5, Math.PI * 0.2, Math.PI * 0.14]} />
-          </mesh>
-        </group>
-        {[-1, 1].map((s) => (
-          <mesh key={s} material={mats.skin} position={[0.45 * s, 0.43, -0.02]} scale={[0.45, 1, 0.75]}>
-            <sphereGeometry args={[0.1, 16, 12]} />
-          </mesh>
-        ))}
-        <group ref={eyes} position={[0, 0.5, 0]}>
-          {[-1, 1].map((s) => (
-            <mesh key={s} material={mats.dark} position={[0.16 * s, 0, 0.43]} scale={[1, 1.2, 0.6]}>
-              <sphereGeometry args={[0.042, 16, 12]} />
-            </mesh>
-          ))}
-        </group>
-        {[-1, 1].map((s) => (
-          <mesh key={s} material={mats.hair} position={[0.16 * s, 0.64, 0.42]} rotation={[0, 0, 0.08 * s]}>
-            <boxGeometry args={[0.15, 0.028, 0.03]} />
-          </mesh>
-        ))}
-        <mesh material={mats.skin} position={[0, 0.4, 0.49]} scale={[0.75, 1, 0.9]}>
-          <sphereGeometry args={[0.062, 16, 12]} />
-        </mesh>
-        <mesh material={mats.dark} position={[0, 0.27, 0.44]} rotation={[0.2, 0, Math.PI]}>
-          <torusGeometry args={[0.07, 0.011, 8, 20, Math.PI]} />
-        </mesh>
-        <group position={[0, 0.5, 0.5]}>
-          {[-1, 1].map((s) => (
-            <group key={s} position={[0.17 * s, 0, 0]}>
-              <mesh material={mats.frame}>
-                <torusGeometry args={[0.125, 0.017, 10, 36]} />
-              </mesh>
-              <mesh material={mats.lens}>
-                <circleGeometry args={[0.12, 32]} />
-              </mesh>
-              <mesh material={mats.frame} position={[0.13 * s, 0.02, -0.24]} rotation={[0, 0.12 * s, 0]}>
-                <boxGeometry args={[0.015, 0.02, 0.48]} />
-              </mesh>
-            </group>
-          ))}
-          <mesh material={mats.frame} position={[0, 0.02, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.012, 0.012, 0.1, 8]} />
-          </mesh>
-        </group>
-      </group>
+      <HijabDrape mats={mats} />
+      <HijabiHead ref={head} eyes={eyes} mats={mats} />
     </group>
   );
 }
@@ -237,7 +135,7 @@ function Laptop({ mats }: { mats: Mats }) {
   // forces three.js to recompile every material, which stutters mid-scroll.
   return (
     <>
-    <pointLight ref={light} position={[0, -0.65, 1.05]} color="#9fc2ff" intensity={2.4} distance={3} decay={1.6} />
+    <pointLight ref={light} position={[0, -0.65, 1.05]} color="#ffe2bd" intensity={2.4} distance={3} decay={1.6} />
     <group ref={ref} position={[0, -1.55, 0.95]}>
       <mesh material={mats.lid}>
         <boxGeometry args={[1.3, 0.05, 0.9]} />
@@ -351,19 +249,6 @@ function makeScreenTexture(kind: ScreenKind) {
   return tex;
 }
 
-function makeGlowTexture() {
-  const c = document.createElement("canvas");
-  c.width = c.height = 128;
-  const g = c.getContext("2d")!;
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, "rgba(255,255,255,0.9)");
-  grad.addColorStop(0.4, "rgba(255,255,255,0.25)");
-  grad.addColorStop(1, "rgba(255,255,255,0)");
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  return new THREE.CanvasTexture(c);
-}
-
 /** About-section workstation: desk, curved ultrawide, RGB mechanical keyboard and the lights they cast. */
 function Desk({ mats }: { mats: Mats }) {
   const root = useRef<THREE.Group>(null);
@@ -397,7 +282,7 @@ function Desk({ mats }: { mats: Mats }) {
   // 5 × 15 keycaps; a few accent/light keys for a custom-keyboard look
   const COLS = 15, ROWS = 5, PITCH = 0.098;
   const keyData = useMemo(() => {
-    const dark = new THREE.Color("#2a2a30"), light = new THREE.Color("#d8d6cf"), acc = new THREE.Color("#ff4a1c");
+    const dark = new THREE.Color("#33261d"), light = new THREE.Color("#efe4d2"), acc = new THREE.Color("#c9955a");
     const list: { x: number; z: number; rx: number; color: THREE.Color }[] = [];
     for (let r = 0; r < ROWS; r++)
       for (let c = 0; c < COLS; c++) {
@@ -460,8 +345,10 @@ function Desk({ mats }: { mats: Mats }) {
     screen.color.r = cast.r;
     screen.color.g = cast.g;
     screen.color.b = cast.b;
-    hue.setHSL((t * 0.08) % 1, 0.9, 0.55);
-    keyHot.setHSL((t * 0.08) % 1, 1, 0.75);
+    // warm amber glow that breathes between bronze and champagne, instead of a gamer rainbow
+    const warm = 0.08 + Math.sin(t * 0.5) * 0.025;
+    hue.setHSL(warm, 0.75, 0.55);
+    keyHot.setHSL(warm, 0.9, 0.78);
 
     // typing: each hand presses a key every 70 to 220 ms; keys sink and light up, then spring back
     const typingOn = stage.p > 0.6;
@@ -556,7 +443,7 @@ function Desk({ mats }: { mats: Mats }) {
           {/* bias-light strip on the back */}
           <mesh position={[0, H / 2 - 0.05, 0]}>
             <cylinderGeometry args={[R + 0.07, R + 0.07, 0.03, 64, 1, true, -L / 2 + 0.1, L - 0.2]} />
-            <meshBasicMaterial color="#ff4a1c" side={THREE.DoubleSide} toneMapped={false} />
+            <meshBasicMaterial color="#d4a066" side={THREE.DoubleSide} toneMapped={false} />
           </mesh>
         </group>
         {/* stand */}
@@ -576,42 +463,14 @@ function Desk({ mats }: { mats: Mats }) {
   );
 }
 
-function GlbAvatar({ url, onFail }: { url: string; onFail: () => void }) {
-  const [scene, setScene] = useState<THREE.Group | null>(null);
-  const head = useRef<THREE.Object3D | null>(null);
-  useHeadFollow(head);
-
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([import("three/addons/loaders/GLTFLoader.js"), import("three/addons/libs/meshopt_decoder.module.js")])
-      .then(([{ GLTFLoader }, { MeshoptDecoder }]) => {
-        const loader = new GLTFLoader();
-        loader.setMeshoptDecoder(MeshoptDecoder);
-        return loader.loadAsync(url);
-      })
-      .then((gltf) => {
-        if (cancelled) return;
-        head.current = HEAD_BONE_NAMES.map((n) => gltf.scene.getObjectByName(n)).find(Boolean) ?? null;
-        setScene(gltf.scene);
-      })
-      .catch(onFail);
-    return () => {
-      cancelled = true;
-    };
-  }, [url, onFail]);
-
-  return scene ? <primitive object={scene} /> : null;
-}
-
 /**
  * The whole character rig. Scroll progress (stage.p) moves it from the centred hero pose
  * to a three-quarter view at the desk in the About section.
  */
 export default function Workstation() {
   const mats = useMaterials();
+  const character = useCharacterMaterials();
   const rig = useRef<THREE.Group>(null);
-  const [failed, setFailed] = useState(false);
-  const onFail = useCallback(() => setFailed(true), []);
   // follows the canvas size, so rotating a phone re-frames the desk scene
   const portrait = useThree((s) => s.size.width / s.size.height < 0.8);
 
@@ -625,7 +484,7 @@ export default function Workstation() {
 
   return (
     <group ref={rig} scale={0.74}>
-      {AVATAR_URL && !failed ? <GlbAvatar url={AVATAR_URL} onFail={onFail} /> : <ProceduralAvatar mats={mats} />}
+      <ProceduralAvatar mats={character} />
       <Laptop mats={mats} />
       <Desk mats={mats} />
     </group>

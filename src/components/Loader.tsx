@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { fullName, profile } from "../data/content";
+import { pad } from "../lib";
 import { BrandMark } from "./ui";
 
 const MIN_MS = 1500; // long enough for the name to decode
@@ -52,7 +53,7 @@ export default function Loader({ ready, onDone }: Props) {
 
     const render = (now: number) => {
       const v = Math.min(100, Math.max(0, value));
-      const txt = String(Math.round(v)).padStart(2, "0");
+      const txt = pad(Math.round(v));
       for (const t of pctText.current) if (t) t.textContent = txt;
       if (pctFill.current) pctFill.current.style.clipPath = `inset(${100 - v}% 0 0 0)`;
       if (glow.current) glow.current.style.opacity = String(0.25 + (v / 100) * 0.75);

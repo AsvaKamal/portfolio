@@ -53,8 +53,8 @@ function Card({ t }: { t: Testimonial }) {
         <svg className="tq__mark" viewBox="0 0 64 48" aria-hidden="true">
           <defs>
             <linearGradient id={gradId} x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stopColor="#ff4a1c" />
-              <stop offset="1" stopColor="#ffb54a" />
+              <stop offset="0" stopColor="#b0804a" />
+              <stop offset="1" stopColor="#e6c79c" />
             </linearGradient>
           </defs>
           <path fill={`url(#${gradId})`} d="M0 48V28C0 12 8 3 24 0l3 6C18 9 14 14 14 22h12v26zm36 0V28c0-16 8-25 24-28l3 6c-9 3-13 8-13 16h12v26z" />
@@ -81,7 +81,7 @@ function Card({ t }: { t: Testimonial }) {
           <span className="tq__id">
             <strong>{t.name}</strong>
             <span className="mono dim">
-              {t.role}, {t.company}
+              {t.role ? `${t.role}, ${t.company}` : t.company}
             </span>
           </span>
           <span className="tq__side">

@@ -217,7 +217,7 @@ function BackToTop() {
   );
 }
 
-function CopyEmail({ address, label }: { address: string; label: string }) {
+function CopyEmail({ address, label }: { address: string; label?: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -230,7 +230,7 @@ function CopyEmail({ address, label }: { address: string; label: string }) {
   };
   return (
     <div className="femail">
-      <span className="mono dim">{label}</span>
+      {label && <span className="mono dim">{label}</span>}
       <div className="femail__row">
         <a href={`mailto:${address}`}>{address}</a>
         <button className={`femail__copy${copied ? " is-copied" : ""}`} onClick={copy} aria-label={`Copy ${address}`}>
@@ -295,7 +295,7 @@ export default function Contact() {
             <div className="footer__col">
               <span className="mono dim">Email</span>
               {profile.emails.map((e) => (
-                <CopyEmail key={e.address} address={e.address} label={e.label} />
+                <CopyEmail key={e.address} address={e.address} label={profile.emails.length > 1 ? e.label : undefined} />
               ))}
             </div>
             <div className="footer__col footer__col--top">

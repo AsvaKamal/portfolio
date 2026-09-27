@@ -4,6 +4,9 @@
 export const projectId = (title: string) =>
   "project-" + title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+/** Zero-padded counter text, e.g. pad(3) → "03", pad(7, 3) → "007". */
+export const pad = (n: number, len = 2) => String(n).padStart(len, "0");
+
 /** Runs `fn` once and remembers the answer. */
 const once = <T,>(fn: () => T) => {
   let value: T | undefined;

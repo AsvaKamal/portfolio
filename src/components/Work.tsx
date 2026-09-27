@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { projects, type Project } from "../data/content";
 import { useInView } from "../hooks";
-import { projectId } from "../lib";
+import { pad, projectId } from "../lib";
 import CurvedMonitor from "./CurvedMonitor";
 import { SectionLabel, SectionTitle, ToolChips } from "./ui";
 
@@ -44,7 +44,7 @@ function ProjectRow({ p, i }: { p: Project; i: number }) {
       </div>
       <div className="project__info">
         <div className="project__meta">
-          <span className="project__index">{String(i + 1).padStart(2, "0")}</span>
+          <span className="project__index">{pad(i + 1)}</span>
           <span className="project__cat mono">
             <span className="dot" style={{ background: p.glow }} />
             {p.category}

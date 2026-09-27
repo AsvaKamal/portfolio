@@ -1,21 +1,18 @@
 // All site copy lives here. The layout reads everything from this file.
 
 export const profile = {
-  firstName: "ALI",
-  lastName: "ASGHAR",
+  firstName: "ASVA",
+  lastName: "KAMAL",
   role: "Data Scientist · AI Automation Engineer",
   title: "AI Automation Engineer", // how the site refers to you
   location: "Karachi, Pakistan",
   timeZone: "Asia/Karachi", // IANA zone shown by the nav clock
-  email: "ali.asgherr20@gmail.com", // primary, used for the contact button
-  emails: [
-    { label: "Personal", address: "ali.asgherr20@gmail.com" },
-    { label: "Business", address: "business.intelliops@gmail.com" },
-  ],
+  email: "asvakamalak@gmail.com", // primary, used for the contact button
+  emails: [{ label: "Say hello", address: "asvakamalak@gmail.com" }],
   available: true,
   socials: [
-    { label: "LinkedIn", icon: "linkedin", href: "https://www.linkedin.com/in/ali-asgharr/" },
-    { label: "GitHub", icon: "github", href: "https://github.com/Intelli-Ops" },
+    { label: "LinkedIn", icon: "linkedin", href: "https://www.linkedin.com/in/asva-kamal-39547027a/" },
+    { label: "GitHub", icon: "github", href: "https://github.com/AsvaKamal" },
   ],
 };
 
@@ -88,11 +85,11 @@ export const services: Service[] = [
   },
 ];
 
-// Icon slugs from src/data/icons.tsx, shown as the 3D tech-stack balls.
+// Icon slugs from src/data/icons.tsx, one per arrow in the tech-stack archery scene.
 export const techStack = [
-  "python", "pandas", "numpy", "scikitlearn", "django", "fastapi", "flask", "jupyter",
-  "pytorch", "huggingface", "opencv", "excel", "powerbi", "powerautomate", "sqlserver",
-  "postgresql", "mysql", "rabbitmq", "selenium", "claude", "googlegemini", "nodedotjs", "git",
+  "python", "pandas", "numpy", "scikitlearn", "huggingface", "fastapi", "flask", "streamlit",
+  "rabbitmq", "claude", "googlegemini", "powerautomate", "excel", "powerbi", "postgresql",
+  "mysql", "mongodb", "supabase", "react", "nodedotjs", "git",
 ] as const;
 
 /** Animated monitor screens, drawn in src/components/ProjectScreens.tsx. */
@@ -117,7 +114,7 @@ export const projects: Project[] = [
     title: "AI Check Posting Automation",
     summary: "An automated document-processing workflow that uses OCR to extract patient and payment details from uploaded documents, validates them against the company database and updates patient records.",
     tools: ["Python", "FastAPI", "OCR Model", "RabbitMQ", "Claude AI", "Antigravity"],
-    glow: "#ff4a1c",
+    glow: "#c8894a",
     category: "Document AI",
     screen: "check",
   },
@@ -125,7 +122,7 @@ export const projects: Project[] = [
     title: "OCR Document Reading Model",
     summary: "Fine-tuned Microsoft's TrOCR on company-specific documents to improve automated document reading and information extraction.",
     tools: ["Python", "Microsoft TrOCR", "Claude AI", "Antigravity"],
-    glow: "#6f8cff",
+    glow: "#d9b27c",
     category: "Machine Learning",
     screen: "ocr",
   },
@@ -133,7 +130,7 @@ export const projects: Project[] = [
     title: "SBR Operational Report Automation",
     summary: "Automated the weekly SBR report used across operations for 22 providers, applying business logic and validations across multiple datasets.",
     tools: ["Python", "Excel", "Claude AI", "Antigravity"],
-    glow: "#2fd4a3",
+    glow: "#a3b18a",
     category: "Report Automation",
     screen: "sbr",
   },
@@ -141,7 +138,7 @@ export const projects: Project[] = [
     title: "AR Reports Automation Workflow",
     summary: "A workflow that downloads, formats and consolidates daily Accounts Receivable reports from multiple company portals, with less manual work and fewer errors.",
     tools: ["Power Automate", "Python", "VBScript", "Excel", "Claude AI", "Antigravity"],
-    glow: "#b36bff",
+    glow: "#c47a5a",
     category: "Workflow Automation",
     screen: "ar",
   },
@@ -149,7 +146,7 @@ export const projects: Project[] = [
     title: "Client Weekly Report Automation",
     summary: "Automated a weekly financial client report built from multiple data sources, implementing the business rules and calculations to generate a structured report.",
     tools: ["Python", "Excel", "Claude AI", "Antigravity"],
-    glow: "#ffb020",
+    glow: "#e0c08f",
     category: "Financial Reporting",
     screen: "weekly",
   },
@@ -157,7 +154,7 @@ export const projects: Project[] = [
     title: "Maidan: Sports Facility Financial & Booking Automation",
     summary: "A reporting web app for a sports facility that automates bookings, financial tracking, revenue monitoring and operational reporting.",
     tools: ["React", "Node.js", "PostgreSQL", "Google Gemini", "Claude AI", "Antigravity"],
-    glow: "#3ddc84",
+    glow: "#8fae8b",
     category: "Web App",
     screen: "booking",
   },
@@ -165,7 +162,7 @@ export const projects: Project[] = [
     title: "Lead Scraper & Cold Email Marketing Software",
     summary: "A lead-generation tool that scrapes and organises prospect data, then runs personalised cold-email outreach campaigns from one place.",
     tools: ["Python", "Web Scraping", "Email Automation"],
-    glow: "#ff5da2",
+    glow: "#d08a7a",
     category: "Growth Automation",
     screen: "leads",
   },
@@ -175,7 +172,8 @@ export type Testimonial = {
   /** *text* is highlighted, like the About headline. Keep it short and in plain words. */
   quote: string;
   name: string;
-  role: string;
+  /** Optional job title, shown before the company. */
+  role?: string;
   company: string;
   photo: string; // square image in public/testimonials, shown as a circle
   project: string; // project title from `projects`, shown as a chip linking to Work
@@ -184,17 +182,15 @@ export type Testimonial = {
 export const testimonials: Testimonial[] = [
   {
     quote:
-      "Ali is very professional. He helped me *shape my business idea* into a clear plan, sent proper proposals and gave honest advice: *focus on what matters and keep the scope small.* That made the whole project simple and clear.",
-    name: "Burhanuddin Mustafa",
-    role: "CEO",
-    company: "Finaccsol",
-    photo: "/testimonials/burhanuddin.webp",
-    project: "Lead Scraper & Cold Email Marketing Software",
+      "Our team was copying handwritten documents into Excel by hand before we could do anything with the data. Asva built a model that *reads around 85% of them on its own* and then *uploads the relevant details straight to our portal.* Hours of typing every week are simply gone.",
+    name: "Ali Asad",
+    company: "360 Virtual Associates",
+    photo: "/testimonials/ali-asad.webp",
+    project: "OCR Document Reading Model",
   },
 ];
 
 export const experience = [
-  { role: "AI Automation Engineer", company: "Appedology", period: "Nov 2025 to Present", note: "AI & data-driven automation for operations" },
-  { role: "Data Science Intern", company: "10Pearls", period: "Sep to Nov 2025", note: "Preprocessing, model training & evaluation" },
-  { role: "Data Analyst Intern", company: "Systems Limited", period: "May to Aug 2025", note: "SQL, ETL / SSIS and Power BI dashboards" },
+  { role: "Data Science & Automation Analyst", company: "Appedology", period: "Nov 2025 to Present", note: "AI & data-driven automation for operations" },
+  { role: "Data Analyst Intern", company: "Excelerate", period: "Aug to Sep 2025", note: "PostgreSQL, KPI dashboards in Looker Studio & EDA" },
 ];

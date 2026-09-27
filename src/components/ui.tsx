@@ -1,5 +1,6 @@
 import { initials, sections, type SectionId } from "../data/content";
 import { ToolIcon, toolColor } from "../data/icons";
+import { pad } from "../lib";
 import RichText from "./RichText";
 
 /** "AA®" logo mark; the wrapper element decides size and link. */
@@ -12,7 +13,7 @@ export const BrandMark = () => (
 
 /** "(03) Tech stack ········ Tools I ship with". The number comes from the section's position in `sections`. */
 export function SectionLabel({ id, title, note, style }: { id: SectionId; title: string; note: string; style?: React.CSSProperties }) {
-  const n = String(sections.indexOf(id) + 1).padStart(2, "0");
+  const n = pad(sections.indexOf(id) + 1);
   return (
     <div className="label-row mono" style={style}>
       <span>

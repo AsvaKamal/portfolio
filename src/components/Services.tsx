@@ -1,12 +1,13 @@
 import { services, type Service } from "../data/content";
 import { useInView } from "../hooks";
+import { pad } from "../lib";
 import { MONO, Packet, Wire, useSvgId, useSvgPlayback } from "./svg";
 import { SectionLabel, SectionTitle, ToolChips } from "./ui";
 
-const ACC = "#ff4a1c";
-const LINE = "#2a2a31";
-const TEXT = "#8f8e88";
-const OK = "#3ddc84";
+const ACC = "#c9955a";
+const LINE = "#3a2c22";
+const TEXT = "#a8998a";
+const OK = "#8fb58a";
 
 /** Dark "live" backdrop shared by all three diagrams: a dot grid (one pattern, not 160 circles) and a status line. */
 function Backdrop({ label }: { label: string }) {
@@ -15,10 +16,10 @@ function Backdrop({ label }: { label: string }) {
     <>
       <defs>
         <pattern id={id} width="25" height="25" patternUnits="userSpaceOnUse">
-          <circle cx="12" cy="12" r="0.8" fill="#26262c" />
+          <circle cx="12" cy="12" r="0.8" fill="#3a2c22" />
         </pattern>
       </defs>
-      <rect width="400" height="250" fill="#0f0f11" />
+      <rect width="400" height="250" fill="#221811" />
       <rect width="400" height="250" fill={`url(#${id})`} />
       <circle cx="18" cy="18" r="3" fill={OK}>
         <animate attributeName="opacity" values="1;0.25;1" dur="1.6s" repeatCount="indefinite" />
@@ -50,40 +51,40 @@ function FlowVisual() {
       <Packet d="M242 125 H286" color={ACC} dur={0.9} />
       {srcs.map((s) => (
         <g key={s.label}>
-          <rect x="20" y={s.y} width="78" height="34" rx="7" fill="#18181c" stroke={LINE} />
+          <rect x="20" y={s.y} width="78" height="34" rx="7" fill="#2c2019" stroke={LINE} />
           <rect x="30" y={s.y + 13} width="8" height="8" rx="2" fill={ACC} opacity="0.8" />
-          <text x="44" y={s.y + 21} fill="#e9e6df" fontSize="9" {...MONO}>
+          <text x="44" y={s.y + 21} fill="#f1e8da" fontSize="9" {...MONO}>
             {s.label}
           </text>
         </g>
       ))}
       {/* engine */}
-      <rect x="158" y="88" width="84" height="74" rx="12" fill="#18181c" stroke={ACC} strokeOpacity="0.6" />
+      <rect x="158" y="88" width="84" height="74" rx="12" fill="#2c2019" stroke={ACC} strokeOpacity="0.6" />
       <g className="svc-spin" style={{ transformOrigin: "200px 116px" }}>
         <circle cx="200" cy="116" r="15" fill="none" stroke={ACC} strokeWidth="3" strokeDasharray="14 8" />
       </g>
       <circle cx="200" cy="116" r="5" fill={ACC}>
         <animate attributeName="r" values="4;6;4" dur="1.2s" repeatCount="indefinite" />
       </circle>
-      <text x="200" y="151" textAnchor="middle" fill="#e9e6df" fontSize="8.5" letterSpacing="0.6" {...MONO}>
+      <text x="200" y="151" textAnchor="middle" fill="#f1e8da" fontSize="8.5" letterSpacing="0.6" {...MONO}>
         AUTOMATE
       </text>
       {/* report assembling itself */}
-      <rect x="288" y="44" width="94" height="162" rx="8" fill="#f2f1ed" />
-      <rect x="288" y="44" width="94" height="22" rx="8" fill="#e3e2dc" />
-      <text x="296" y="58.5" fill="#0b0b0c" fontSize="7.5" letterSpacing="0.5" {...MONO}>
+      <rect x="288" y="44" width="94" height="162" rx="8" fill="#f8f3ea" />
+      <rect x="288" y="44" width="94" height="22" rx="8" fill="#ece2d3" />
+      <text x="296" y="58.5" fill="#1a120d" fontSize="7.5" letterSpacing="0.5" {...MONO}>
         WEEKLY REPORT
       </text>
       {[70, 56, 74, 48, 66, 60].map((w, i) => (
-        <rect key={i} x="298" y={78 + i * 16} height="7" rx="3.5" width="0" fill={i === 2 ? ACC : "#c9c8c2"}>
+        <rect key={i} x="298" y={78 + i * 16} height="7" rx="3.5" width="0" fill={i === 2 ? ACC : "#d8cbb8"}>
           <animate attributeName="width" values={`0;${w};${w};0`} keyTimes="0;0.25;0.9;1" dur="4s" begin={`${i * 0.25}s`} repeatCount="indefinite" />
         </rect>
       ))}
       <g opacity="0">
         <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.55;0.62;0.9;1" dur="4s" repeatCount="indefinite" />
         <circle cx="304" cy="189" r="7" fill={OK} />
-        <path d="M300.5 189l2.5 2.6 4.6-5" fill="none" stroke="#0b0b0c" strokeWidth="1.8" strokeLinecap="round" />
-        <text x="316" y="192" fill="#0b0b0c" fontSize="8" {...MONO}>
+        <path d="M300.5 189l2.5 2.6 4.6-5" fill="none" stroke="#1a120d" strokeWidth="1.8" strokeLinecap="round" />
+        <text x="316" y="192" fill="#1a120d" fontSize="8" {...MONO}>
           VALIDATED
         </text>
       </g>
@@ -102,10 +103,10 @@ function ChartVisual() {
     <>
       <Backdrop label="POWER BI · REVENUE DASHBOARD" />
       {[70, 110, 150, 190].map((y) => (
-        <line key={y} x1="30" x2="370" y1={y} y2={y} stroke="#1d1d22" strokeDasharray="3 5" />
+        <line key={y} x1="30" x2="370" y1={y} y2={y} stroke="#33261d" strokeDasharray="3 5" />
       ))}
       {bars.map(([a, b, c], i) => (
-        <rect key={i} x={40 + i * 40} width="24" rx="4" y={210 - a} height={a} fill={i === 5 ? ACC : "#26262d"} opacity={i === 5 ? 0.9 : 1}>
+        <rect key={i} x={40 + i * 40} width="24" rx="4" y={210 - a} height={a} fill={i === 5 ? ACC : "#3d2e24"} opacity={i === 5 ? 0.9 : 1}>
           <animate attributeName="height" values={`${a};${b};${c};${a}`} begin={`${i * 0.15}s`} {...spline} />
           <animate attributeName="y" values={`${210 - a};${210 - b};${210 - c};${210 - a}`} begin={`${i * 0.15}s`} {...spline} />
         </rect>
@@ -122,12 +123,12 @@ function ChartVisual() {
         <animateMotion dur="4s" repeatCount="indefinite" path={line} keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="linear" />
       </circle>
       {/* KPI chip with cycling value */}
-      <rect x="276" y="10" width="112" height="26" rx="6" fill="#18181c" stroke={LINE} />
+      <rect x="276" y="10" width="112" height="26" rx="6" fill="#2c2019" stroke={LINE} />
       <text x="286" y="27" fill={TEXT} fontSize="8" {...MONO}>
         MoM
       </text>
       {["+12.4%", "+18.9%", "+32.8%"].map((v, i) => (
-        <text key={v} x="378" y="27.5" textAnchor="end" fill={i === 2 ? ACC : "#e9e6df"} fontSize="11" fontWeight="700" {...MONO} opacity="0">
+        <text key={v} x="378" y="27.5" textAnchor="end" fill={i === 2 ? ACC : "#f1e8da"} fontSize="11" fontWeight="700" {...MONO} opacity="0">
           <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.05;0.3;0.34;1" dur="6s" begin={`${i * 2}s`} repeatCount="indefinite" />
           {v}
         </text>
@@ -153,9 +154,9 @@ function AiVisual() {
     <>
       <Backdrop label="OCR → AI → API · PROCESSING" />
       {/* document being scanned */}
-      <rect x="22" y="42" width="96" height="176" rx="6" fill="#f2f1ed" />
+      <rect x="22" y="42" width="96" height="176" rx="6" fill="#f8f3ea" />
       {[70, 52, 64, 44, 72, 58, 40, 66, 50].map((w, i) => (
-        <rect key={i} x="32" y={58 + i * 17} width={w} height="6" rx="3" fill={i === 2 || i === 5 ? ACC : "#c9c8c2"} opacity={i === 2 || i === 5 ? 0.85 : 1} />
+        <rect key={i} x="32" y={58 + i * 17} width={w} height="6" rx="3" fill={i === 2 || i === 5 ? ACC : "#d8cbb8"} opacity={i === 2 || i === 5 ? 0.85 : 1} />
       ))}
       <rect x="22" y="44" width="96" height="12" fill={ACC} opacity="0.28">
         <animate attributeName="y" values="44;204;44" dur="2.6s" repeatCount="indefinite" />
@@ -173,14 +174,14 @@ function AiVisual() {
       ))}
       {layers.flatMap((L, li) =>
         L.map(([x, y], i) => (
-          <circle key={`${li}-${i}`} cx={x} cy={y} r={li === 2 ? 9 : 7} fill={li === 2 ? ACC : "#18181c"} stroke={li === 2 ? ACC : "#4a4a52"} strokeWidth="1.5">
-            {li < 2 && <animate attributeName="stroke" values={`#4a4a52;${ACC};#4a4a52`} dur="1.8s" begin={`${(i + li) * 0.25}s`} repeatCount="indefinite" />}
+          <circle key={`${li}-${i}`} cx={x} cy={y} r={li === 2 ? 9 : 7} fill={li === 2 ? ACC : "#2c2019"} stroke={li === 2 ? ACC : "#5c4a3c"} strokeWidth="1.5">
+            {li < 2 && <animate attributeName="stroke" values={`#5c4a3c;${ACC};#5c4a3c`} dur="1.8s" begin={`${(i + li) * 0.25}s`} repeatCount="indefinite" />}
           </circle>
         ))
       )}
       <Wire d="M257 125 H272" color={ACC} track={LINE} />
       {/* structured output */}
-      <rect x="272" y="52" width="112" height="146" rx="10" fill="#18181c" stroke={LINE} />
+      <rect x="272" y="52" width="112" height="146" rx="10" fill="#2c2019" stroke={LINE} />
       <text x="284" y="72" fill={TEXT} fontSize="8" letterSpacing="0.6" {...MONO}>
         EXTRACTED
       </text>
@@ -190,7 +191,7 @@ function AiVisual() {
           <text x="284" y={96 + i * 26} fill={TEXT} fontSize="9" {...MONO}>
             {k}
           </text>
-          <text x="374" y={96 + i * 26} textAnchor="end" fill={i === 3 ? OK : "#e9e6df"} fontSize="9.5" {...MONO}>
+          <text x="374" y={96 + i * 26} textAnchor="end" fill={i === 3 ? OK : "#f1e8da"} fontSize="9.5" {...MONO}>
             {v}
           </text>
         </g>
@@ -209,7 +210,7 @@ function ServiceRow({ s, i }: { s: Service; i: number }) {
     <article className={`service${seen ? " is-in" : ""}`} ref={ref} data-reveal>
       <span className="mono service__num">
         <span className="dot" />
-        {String(i + 1).padStart(3, "0")}
+        {pad(i + 1, 3)}
       </span>
       <h3 className="display h-md service__title">{s.title}</h3>
       <div className="service__body">
@@ -218,7 +219,7 @@ function ServiceRow({ s, i }: { s: Service; i: number }) {
           <ol className="svc-steps mono">
             {s.flow.map((st, k) => (
               <li key={st} style={{ ["--i" as string]: k }}>
-                <span>{String(k + 1).padStart(2, "0")}</span>
+                <span>{pad(k + 1)}</span>
                 {st}
               </li>
             ))}

@@ -1,28 +1,26 @@
 import {
-  siPython, siPandas, siNumpy, siScikitlearn, siDjango, siFastapi, siFlask, siJupyter, siPytorch,
-  siHuggingface, siOpencv, siPostgresql, siMysql, siRabbitmq, siSelenium, siClaude, siGooglegemini,
-  siNodedotjs, siGit, siGithub, siReact, siGmail,
+  siPython, siPandas, siNumpy, siScikitlearn, siFastapi, siFlask, siHuggingface, siPostgresql, siMysql,
+  siRabbitmq, siClaude, siGooglegemini, siNodedotjs, siGit, siGithub, siReact, siGmail, siStreamlit, siSupabase, siMongodb,
 } from "simple-icons";
 
 /**
- * One icon registry for the whole site: tool chips (SVG), footer socials (SVG) and the 3D
- * tech-stack balls (drawn onto a canvas from the same path data in src/three/logoTextures.ts).
+ * One icon registry for the whole site: tool chips (SVG), footer socials (SVG) and the badges on
+ * the tech-stack arrows (drawn onto a canvas from the same path data in src/three/textures.ts).
  * All icons use a 24×24 viewBox.
  */
 
-export type BrandIcon = { title: string; hex: string; path: string };
+type BrandIcon = { title: string; hex: string; path: string };
 
 /** A single shape of a custom icon: filled and/or stroked SVG path data. */
-export type IconPart = { d: string; fill?: string; stroke?: string; width?: number; opacity?: number };
-export type CustomIcon = { title: string; hex: string; parts: IconPart[] };
+type IconPart = { d: string; fill?: string; stroke?: string; width?: number; opacity?: number };
+type CustomIcon = { title: string; hex: string; parts: IconPart[] };
 
 /** simple-icons brand marks, keyed by slug. */
-export const BRAND_ICONS: Record<string, BrandIcon> = {
-  python: siPython, pandas: siPandas, numpy: siNumpy, scikitlearn: siScikitlearn, django: siDjango,
-  fastapi: siFastapi, flask: siFlask, jupyter: siJupyter, pytorch: siPytorch, huggingface: siHuggingface,
-  opencv: siOpencv, postgresql: siPostgresql, mysql: siMysql, rabbitmq: siRabbitmq, selenium: siSelenium,
-  claude: siClaude, googlegemini: siGooglegemini, nodedotjs: siNodedotjs, git: siGit, github: siGithub,
-  react: siReact, gmail: siGmail,
+const BRAND_ICONS: Record<string, BrandIcon> = {
+  python: siPython, pandas: siPandas, numpy: siNumpy, scikitlearn: siScikitlearn, fastapi: siFastapi,
+  flask: siFlask, huggingface: siHuggingface, postgresql: siPostgresql, mysql: siMysql, rabbitmq: siRabbitmq,
+  claude: siClaude, googlegemini: siGooglegemini, nodedotjs: siNodedotjs, git: siGit, github: siGithub, react: siReact,
+  gmail: siGmail, streamlit: siStreamlit, supabase: siSupabase, mongodb: siMongodb,
 };
 
 // path helpers
@@ -32,7 +30,7 @@ const ellipse = (cx: number, cy: number, rx: number, ry: number) =>
   `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${2 * rx} 0a${rx} ${ry} 0 1 0 -${2 * rx} 0z`;
 
 /** Hand-drawn marks for tools simple-icons doesn't carry (Microsoft products, LinkedIn, generic tools). */
-export const CUSTOM_ICONS: Record<string, CustomIcon> = {
+const CUSTOM_ICONS: Record<string, CustomIcon> = {
   excel: {
     title: "Excel",
     hex: "217346",
@@ -70,8 +68,8 @@ export const CUSTOM_ICONS: Record<string, CustomIcon> = {
   script: { title: "Script", hex: "8B8A85", parts: [{ d: "M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14", stroke: "currentColor", width: 2 }] },
   scan: {
     title: "OCR",
-    hex: "FF4A1C",
-    parts: [{ d: "M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M7 12h10", stroke: "#FF4A1C", width: 2 }],
+    hex: "B0804A",
+    parts: [{ d: "M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M7 12h10", stroke: "#B0804A", width: 2 }],
   },
   antigravity: {
     title: "Antigravity",
@@ -88,12 +86,12 @@ export const CUSTOM_ICONS: Record<string, CustomIcon> = {
   },
   flow: {
     title: "Workflow",
-    hex: "FF4A1C",
+    hex: "B0804A",
     parts: [
-      { d: ellipse(5, 12, 3, 3), fill: "#FF4A1C" },
-      { d: ellipse(19, 6, 3, 3), fill: "#FF4A1C", opacity: 0.6 },
-      { d: ellipse(19, 18, 3, 3), fill: "#FF4A1C", opacity: 0.6 },
-      { d: "M8 12h4l4-5M12 12l4 5", stroke: "#FF4A1C", width: 1.8 },
+      { d: ellipse(5, 12, 3, 3), fill: "#B0804A" },
+      { d: ellipse(19, 6, 3, 3), fill: "#B0804A", opacity: 0.6 },
+      { d: ellipse(19, 18, 3, 3), fill: "#B0804A", opacity: 0.6 },
+      { d: "M8 12h4l4-5M12 12l4 5", stroke: "#B0804A", width: 1.8 },
     ],
   },
 };

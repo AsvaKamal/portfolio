@@ -91,18 +91,18 @@ export default function CurvedMonitor({ title, glow, screen, image, playing, on 
       <rect x="0" y="429" width="800" height="1.5" fill="#fff" opacity="0.08" />
 
       {/* stand */}
-      <path d="M372 360 L428 360 L420 440 L380 440 Z" fill="#1c1c20" />
-      <ellipse cx="400" cy="444" rx="120" ry="12" fill="#232328" />
+      <path d="M372 360 L428 360 L420 440 L380 440 Z" fill="#2a1f18" />
+      <ellipse cx="400" cy="444" rx="120" ry="12" fill="#30241c" />
       <ellipse cx="400" cy="448" rx="150" ry="10" fill="#000" opacity="0.35" />
 
       {/* keyboard + mouse */}
-      <rect x="260" y="470" width="280" height="30" rx="5" fill="#1a1a1e" />
-      <rect x="266" y="474" width="268" height="22" rx="3" fill="#2a2a30" />
+      <rect x="260" y="470" width="280" height="30" rx="5" fill="#261c16" />
+      <rect x="266" y="474" width="268" height="22" rx="3" fill="#3a2c22" />
       <rect x="260" y="498" width="280" height="3" rx="1.5" fill={glow} opacity="0.8" />
-      <ellipse cx="600" cy="486" rx="16" ry="11" fill="#1a1a1e" />
+      <ellipse cx="600" cy="486" rx="16" ry="11" fill="#261c16" />
 
       {/* bezel + screen */}
-      <path d={BEZEL_PATH} fill="#0b0b0d" stroke="#2c2c31" strokeWidth="1.5" />
+      <path d={BEZEL_PATH} fill="#120c08" stroke="#3a2c22" strokeWidth="1.5" />
       <g clipPath={url("clip")}>
         <rect x="70" y="56" width="660" height="318" fill="#050608" />
         <g className="monitor__screen">

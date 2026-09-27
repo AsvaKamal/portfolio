@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { ScreenKind } from "../data/content";
+import { pad } from "../lib";
 import { Cycle, Grow, MONO, Packet, Wire, loop, seq, useSvgId } from "./svg";
 
 /**
@@ -9,19 +10,19 @@ import { Cycle, Grow, MONO, Packet, Wire, loop, seq, useSvgId } from "./svg";
  * LOOP from ./svg, so CurvedMonitor can pause it off-screen or freeze it for reduced motion.
  */
 
-const BG = "#0f1219";
-const PANEL = "#161b26";
-const LINE = "#252c3b";
+const BG = "#170f0a";
+const PANEL = "#21180f";
+const LINE = "#35281f";
 const TXT = "#e9e6df";
-const MUT = "#6b7489";
-const OK = "#3ddc84";
+const MUT = "#8c7a68";
+const OK = "#8fb58a";
 
 /** App window chrome: traffic lights, file name and a live status. */
 function Chrome({ title, status, g, children }: { title: string; status: string; g: string; children: ReactNode }) {
   return (
     <>
       <rect x="70" y="56" width="660" height="318" fill={BG} />
-      <rect x="70" y="56" width="660" height="44" fill="#121722" />
+      <rect x="70" y="56" width="660" height="44" fill="#1c140e" />
       {["#ff5f57", "#febc2e", "#28c840"].map((c, i) => (
         <circle key={c} cx={100 + i * 14} cy="86" r="4" fill={c} />
       ))}
@@ -49,12 +50,12 @@ function CheckScreen({ g }: { g: string }) {
       <text x="108" y="132" fontSize="8" fill="#8a8373" {...MONO}>PAYER HEALTH PLAN</text>
       <text x="336" y="132" textAnchor="end" fontSize="8" fill="#8a8373" {...MONO}>No. 80321</text>
       <text x="108" y="161" fontSize="7" fill="#8a8373" {...MONO}>PAY TO</text>
-      <path d="M140 160 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0" stroke="#3a3f55" fill="none" strokeWidth="1.6" />
+      <path d="M140 160 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0" stroke="#4a392c" fill="none" strokeWidth="1.6" />
       <rect x="262" y="146" width="74" height="20" rx="3" fill="#fff" stroke="#c9c2af" />
-      <text x="330" y="160" textAnchor="end" fontSize="10" fill="#1d2233" {...MONO}>$1,240.00</text>
+      <text x="330" y="160" textAnchor="end" fontSize="10" fill="#2b2019" {...MONO}>$1,240.00</text>
       <line x1="108" x2="222" y1="190" y2="190" stroke="#c9c2af" />
       <text x="108" y="202" fontSize="7" fill="#8a8373" {...MONO}>MEMO · PATIENT #4471</text>
-      <path d="M250 214 c10 -18 18 10 26 -6 s12 12 22 -4 s10 6 24 -2" stroke="#1d2233" fill="none" strokeWidth="1.5" />
+      <path d="M250 214 c10 -18 18 10 26 -6 s12 12 22 -4 s10 6 24 -2" stroke="#2b2019" fill="none" strokeWidth="1.5" />
       {/* fields the OCR model finds */}
       {[[134, 148, 96, 20], [256, 141, 86, 30], [102, 180, 124, 28]].map(([x, y, w, h], i) => (
         <rect key={i} x={x} y={y} width={w} height={h} rx="3" fill="none" stroke={g} strokeWidth="2" opacity="1">
@@ -81,8 +82,8 @@ function CheckScreen({ g }: { g: string }) {
         return (
           <g key={name}>
             <text x="386" y={y + 14} fill={TXT} fontSize="10" {...MONO}>{name}</text>
-            <text x="560" y={y + 14} textAnchor="end" fill={MUT} fontSize="10" {...MONO}>${(1240 - i * 173).toLocaleString()}.00</text>
-            <rect x="598" y={y} width="94" height="20" rx="10" fill="#232a38" />
+            <text x="560" y={y + 14} textAnchor="end" fill={MUT} fontSize="10" {...MONO}>${(1240 - i * 173).toLocaleString("en-US")}.00</text>
+            <rect x="598" y={y} width="94" height="20" rx="10" fill="#32261d" />
             <text x="645" y={y + 13.5} textAnchor="middle" fill={MUT} fontSize="8.5" letterSpacing="0.6" {...MONO}>PENDING</text>
             <g opacity="1">
               <animate attributeName="opacity" {...seq(0.3 + i * 0.1)} {...loop} />
@@ -106,7 +107,7 @@ function OcrScreen({ g }: { g: string }) {
     <Chrome title="trocr-finetune · inference" status="GPU · 1 JOB" g={g}>
       <rect x="96" y="112" width="608" height="80" rx="8" fill="#f3efe4" />
       <text x="108" y="128" fontSize="8" fill="#8a8373" {...MONO}>INPUT · scanned_form_0931.png</text>
-      <path d={hand} fill="none" stroke="#1d2233" strokeWidth="2.2" strokeLinecap="round" strokeDasharray={L} strokeDashoffset="0">
+      <path d={hand} fill="none" stroke="#2b2019" strokeWidth="2.2" strokeLinecap="round" strokeDasharray={L} strokeDashoffset="0">
         <animate attributeName="stroke-dashoffset" values={`${L};${L};0;0;${L}`} keyTimes="0;0.02;0.4;0.93;1" {...loop} />
       </path>
       <rect x="110" y="140" width="74" height="44" rx="4" fill="none" stroke={g} strokeWidth="2">
@@ -128,7 +129,7 @@ function OcrScreen({ g }: { g: string }) {
       {[0.98, 0.95, 0.99, 0.93].map((c, i) => (
         <g key={i}>
           <rect x="96" y={290 + i * 14} width="220" height="7" rx="3.5" fill={LINE} />
-          <Grow x={96} y={290 + i * 14} w={220 * c} h={7} rx={3.5} fill={i === 3 ? "#ffb54a" : g} start={0.45 + i * 0.06} />
+          <Grow x={96} y={290 + i * 14} w={220 * c} h={7} rx={3.5} fill={i === 3 ? "#e6c79c" : g} start={0.45 + i * 0.06} />
         </g>
       ))}
       {/* character error rate falling during fine-tuning */}
@@ -157,9 +158,9 @@ function SbrScreen({ g }: { g: string }) {
         return (
           <g key={r}>
             <line x1="96" x2="704" y1={y + 26} y2={y + 26} stroke={LINE} />
-            <text x="110" y={y + 17} fill={TXT} fontSize="10" {...MONO}>PRV-{String(r * 4 + 3).padStart(2, "0")}</text>
-            <Grow x={270} y={y + 10} w={40 + ((r * 23) % 50)} h={7} fill="#3a4258" start={s} />
-            <Grow x={390} y={y + 10} w={50 + ((r * 31) % 50)} h={7} fill="#3a4258" start={s + 0.02} />
+            <text x="110" y={y + 17} fill={TXT} fontSize="10" {...MONO}>PRV-{pad(r * 4 + 3)}</text>
+            <Grow x={270} y={y + 10} w={40 + ((r * 23) % 50)} h={7} fill="#4d3b2e" start={s} />
+            <Grow x={390} y={y + 10} w={50 + ((r * 31) % 50)} h={7} fill="#4d3b2e" start={s + 0.02} />
             <Grow x={510} y={y + 10} w={45 + ((r * 17) % 55)} h={7} fill={g} start={s + 0.04} />
             <g opacity="1">
               <animate attributeName="opacity" {...seq(s + 0.08)} {...loop} />
@@ -255,7 +256,7 @@ function WeeklyScreen({ g }: { g: string }) {
             {[0, 1].map((j) => {
               const hh = j ? h * 0.7 : h;
               return (
-                <rect key={j} x={x + j * 16} y={328 - hh} width="12" height={hh} rx="3" fill={j ? "#3a4258" : g}>
+                <rect key={j} x={x + j * 16} y={328 - hh} width="12" height={hh} rx="3" fill={j ? "#4d3b2e" : g}>
                   <animate attributeName="height" {...seq(0.05 + i * 0.06, hh, 0, 0.12)} {...loop} />
                   <animate attributeName="y" {...seq(0.05 + i * 0.06, 328 - hh, 328, 0.12)} {...loop} />
                 </rect>
@@ -291,8 +292,8 @@ function BookingScreen({ g }: { g: string }) {
             const booked = (d * 5 + r * 3) % 7 < 5;
             const start = 0.04 + (((d * 7 + r * 13) % 29) / 29) * 0.6;
             return (
-              <rect key={d} x={132 + d * 42} y={134 + r * 34} width="36" height="28" rx="5" fill={booked ? g : "#1b2130"} opacity={booked ? 0.9 : 1}>
-                {booked && <animate attributeName="fill" {...seq(start, g, "#1b2130", 0.04)} {...loop} />}
+              <rect key={d} x={132 + d * 42} y={134 + r * 34} width="36" height="28" rx="5" fill={booked ? g : "#291e17"} opacity={booked ? 0.9 : 1}>
+                {booked && <animate attributeName="fill" {...seq(start, g, "#291e17", 0.04)} {...loop} />}
               </rect>
             );
           })}
@@ -331,8 +332,8 @@ function LeadsScreen({ g }: { g: string }) {
         return (
           <g key={d} opacity="1">
             <animate attributeName="opacity" {...seq(0.04 + i * 0.07)} {...loop} />
-            <circle cx="120" cy={y + 13} r="9" fill="#26304a" />
-            <rect x="136" y={y + 5} width={60 + ((i * 17) % 30)} height="6" rx="3" fill="#3a4258" />
+            <circle cx="120" cy={y + 13} r="9" fill="#3a2c22" />
+            <rect x="136" y={y + 5} width={60 + ((i * 17) % 30)} height="6" rx="3" fill="#4d3b2e" />
             <text x="136" y={y + 23} fill={MUT} fontSize="8" {...MONO}>{d}</text>
             <circle cx="310" cy={y + 13} r="6" fill={OK} opacity="0.9" />
           </g>
