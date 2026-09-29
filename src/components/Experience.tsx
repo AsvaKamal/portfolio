@@ -12,7 +12,6 @@ export default function Experience() {
             <span className="exp__role">{e.role}</span>
             <span className="mono">{e.company}</span>
             <span className="dim">{e.note}</span>
-            <span className="mono dim">{e.period}</span>
           </div>
         ))}
       </div>

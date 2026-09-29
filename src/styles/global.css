@@ -390,7 +390,7 @@ svg.is-paused *, svg.is-paused { animation-play-state: paused !important; }
 .tq.is-paused .tq__card::before, .tq.is-paused .tq__card::after, .tq.is-paused .tq__ring, .tq.is-paused .tq__mark { animation-play-state: paused; }
 
 /* ---------- experience ---------- */
-.exp { display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap: 24px; align-items: center; padding: 28px 0; border-bottom: 1px solid var(--line-dark); transition: padding 0.4s var(--ease), color 0.3s; }
+.exp { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 24px; align-items: center; padding: 28px 0; border-bottom: 1px solid var(--line-dark); transition: padding 0.4s var(--ease), color 0.3s; }
 .exp:first-of-type { border-top: 1px solid var(--line-dark); }
 .exp:hover { padding-left: 16px; }
 .exp:hover .exp__role { color: var(--accent); }

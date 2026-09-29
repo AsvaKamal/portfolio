@@ -184,13 +184,14 @@ export const testimonials: Testimonial[] = [
     quote:
       "Our team was copying handwritten documents into Excel by hand before we could do anything with the data. Asva built a model that *reads around 85% of them on its own* and then *uploads the relevant details straight to our portal.* Hours of typing every week are simply gone.",
     name: "Ali Asad",
-    company: "360 Virtual Associates",
+    company: "Freelancer",
     photo: "/testimonials/ali-asad.webp",
     project: "OCR Document Reading Model",
   },
 ];
 
 export const experience = [
-  { role: "Data Science & Automation Analyst", company: "Appedology", period: "Nov 2025 to Present", note: "AI & data-driven automation for operations" },
-  { role: "Data Analyst Intern", company: "Excelerate", period: "Aug to Sep 2025", note: "PostgreSQL, KPI dashboards in Looker Studio & EDA" },
+  { role: "AI Automation Engineer", company: "Freelance", note: "AI agents, OCR pipelines & workflow automation for clients" },
+  { role: "Data Science & Automation Analyst", company: "Appedology", note: "AI & data-driven automation for operations" },
+  { role: "Data Analyst Intern", company: "Excelerate", note: "PostgreSQL, KPI dashboards in Looker Studio & EDA" },
 ];
