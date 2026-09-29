@@ -30,7 +30,7 @@ export type SectionId = (typeof sections)[number];
  * A Formspree URL (https://formspree.io/f/...) also works. While this is empty, the form opens
  * the visitor's email app with the message pre-filled instead.
  */
-export const contactForm = { endpoint: "https://script.google.com/macros/s/AKfycbw_DOugXUX62HzdVFQTGTdJbrB21MxAcygUQQSSG2j2EZBwaXkqZc4CYx1QOvjAvab4gg/exec" };
+export const contactForm = { endpoint: "https://script.google.com/macros/s/AKfycbyV1r_zPYhm0NCReTamciR8MhmIGKaeJoCQHeyxA0XizpE9AOm8rj70r3YmQfVN88FEdg/exec" };
 
 // Scrolling ticker under the About section.
 export const clients = ["Medical Lien Management", "Green Sense Billing", "Billgenix", "Maidan", "Finaccsol"];
