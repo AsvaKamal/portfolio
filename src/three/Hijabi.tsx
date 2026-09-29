@@ -3,18 +3,22 @@ import * as THREE from "three";
 
 /**
  * The procedural character shared by the hero/desk scene and the tech-stack archery scene:
- * a head in a hijab with round gold-rimmed glasses, and the hijab's drape over the shoulders.
+ * a head in a soft grey hijab with thin round silver glasses, the hijab's drape over the shoulders,
+ * a navy knit top and white headphones resting around the neck.
  * Units are "avatar units": neck base at the origin, head radius 0.5, facing +z.
  */
 
 const PALETTE = {
-  skin: "#e2b594",
-  hijab: "#7d5a45",
-  underscarf: "#f1e6d6",
-  top: "#2f221b",
-  brow: "#2b1a12",
-  lips: "#b4675b",
-  frame: "#c9a063",
+  skin: "#f0c8ab",
+  hijab: "#a9adb4",
+  underscarf: "#c9ccd1",
+  top: "#1d2740",
+  brow: "#3b2a22",
+  lips: "#c46f72",
+  blush: "#eea79a",
+  frame: "#a9afb8",
+  phones: "#f2f2f0",
+  cushion: "#c8cacd",
 };
 
 /** Materials for the character. `lens` is animated by the desk scene (it reflects the monitor). */
@@ -27,9 +31,12 @@ export function useCharacterMaterials() {
       top: new THREE.MeshStandardMaterial({ color: PALETTE.top, roughness: 0.9, side: THREE.DoubleSide }),
       brow: new THREE.MeshStandardMaterial({ color: PALETTE.brow, roughness: 0.8 }),
       lips: new THREE.MeshStandardMaterial({ color: PALETTE.lips, roughness: 0.5 }),
+      blush: new THREE.MeshStandardMaterial({ color: PALETTE.blush, roughness: 0.7, transparent: true, opacity: 0.55, depthWrite: false }),
       dark: new THREE.MeshStandardMaterial({ color: "#150d09", roughness: 0.3 }),
-      frame: new THREE.MeshStandardMaterial({ color: PALETTE.frame, roughness: 0.28, metalness: 0.85 }),
-      lens: new THREE.MeshStandardMaterial({ color: "#e6c79c", emissive: "#d4a066", emissiveIntensity: 0.25, transparent: true, opacity: 0.2, roughness: 0.1 }),
+      frame: new THREE.MeshStandardMaterial({ color: PALETTE.frame, roughness: 0.25, metalness: 0.9 }),
+      lens: new THREE.MeshStandardMaterial({ color: "#dfe6ee", emissive: "#d4a066", emissiveIntensity: 0.25, transparent: true, opacity: 0.2, roughness: 0.1 }),
+      phones: new THREE.MeshStandardMaterial({ color: PALETTE.phones, roughness: 0.35 }),
+      cushion: new THREE.MeshStandardMaterial({ color: PALETTE.cushion, roughness: 0.85 }),
     }),
     []
   );
@@ -148,23 +155,30 @@ export const HijabiHead = forwardRef<THREE.Group, { mats: CharacterMats; eyes?: 
           <sphereGeometry args={[0.04, 12, 8]} />
         </mesh>
 
-        {/* round glasses, thin gold rims; the temples tuck under the hijab */}
+        {/* a soft blush on the cheeks, below the lenses */}
+        {[-1, 1].map((s) => (
+          <mesh key={s} material={mats.blush} position={[0.2 * s, 0.37, 0.405]} rotation={[0, 0.42 * s, 0]} scale={[1, 0.7, 1]}>
+            <circleGeometry args={[0.055, 20]} />
+          </mesh>
+        ))}
+
+        {/* round glasses, thin silver rims; the temples tuck under the hijab */}
         <group position={[0, 0.5, 0.5]}>
           {[-1, 1].map((s) => (
             <group key={s} position={[0.165 * s, 0, 0]}>
               <mesh material={mats.frame}>
-                <torusGeometry args={[0.118, 0.016, 10, 40]} />
+                <torusGeometry args={[0.118, 0.01, 10, 40]} />
               </mesh>
               <mesh material={mats.lens}>
                 <circleGeometry args={[0.114, 32]} />
               </mesh>
               <mesh material={mats.frame} position={[0.125 * s, 0.02, -0.22]} rotation={[0, 0.14 * s, 0]}>
-                <boxGeometry args={[0.014, 0.018, 0.44]} />
+                <boxGeometry args={[0.01, 0.013, 0.44]} />
               </mesh>
             </group>
           ))}
           <mesh material={mats.frame} position={[0, 0.03, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <torusGeometry args={[0.05, 0.011, 8, 16, Math.PI]} />
+            <torusGeometry args={[0.05, 0.008, 8, 16, Math.PI]} />
           </mesh>
         </group>
       </group>
@@ -172,15 +186,44 @@ export const HijabiHead = forwardRef<THREE.Group, { mats: CharacterMats; eyes?: 
   }
 );
 
-/** The hijab falling over the neck and shoulders, in body space (outside the torso). */
+/** The hijab wrapped snugly round the neck, ending on the shoulders; in body space (outside the torso). */
 export function HijabDrape({ mats }: { mats: CharacterMats }) {
   const geo = useMemo(() => {
     const pts = [
-      [0.28, 0.46], [0.32, 0.26], [0.4, 0.1], [0.6, -0.02], [0.84, -0.15], [0.97, -0.3], [1.0, -0.47], [0.98, -0.62], [0.95, -0.72],
+      [0.28, 0.46], [0.31, 0.26], [0.38, 0.1], [0.55, 0.0], [0.72, -0.08], [0.83, -0.17], [0.89, -0.27], [0.88, -0.36],
     ].map(([x, y]) => new THREE.Vector2(x, y));
     return new THREE.LatheGeometry(pts, 56);
   }, []);
   return <mesh geometry={geo} material={mats.hijab} scale={[1, 1, 0.62]} />;
+}
+
+/**
+ * Over-ear headphones resting around the neck, in body space: the band circles the back of the neck
+ * on the hijab, the cups lie on the collarbones facing outwards. Angles are measured from the front (+z).
+ */
+const PHONES = { r: 0.56, rz: 0.52, gap: 0.72, tilt: 0.45 };
+export function Headphones({ mats }: { mats: CharacterMats }) {
+  const { r, rz, gap, tilt } = PHONES;
+  const at = (a: number) => new THREE.Vector3(r * Math.sin(a), 0, rz * Math.cos(a));
+  const band = useMemo(() => {
+    const pts = Array.from({ length: 25 }, (_, i) => at(gap + ((Math.PI * 2 - gap * 2) * i) / 24));
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 48, 0.034, 8, false);
+  }, []);
+  return (
+    <group position={[0, 0.1, 0]} rotation={[tilt, 0, 0]}>
+      <mesh geometry={band} material={mats.phones} />
+      {[-1, 1].map((s) => (
+        <group key={s} position={at(gap * s).multiplyScalar(1.12)} rotation={[0, gap * s, 0]}>
+          <mesh material={mats.phones} position={[0, 0, 0.04]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.15, 0.14, 0.09, 28]} />
+          </mesh>
+          <mesh material={mats.cushion} position={[0, 0, -0.02]}>
+            <torusGeometry args={[0.115, 0.04, 10, 28]} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
 }
 
 /** Torso (a lathe, flattened front to back) in body space: sloped shoulders into a gently tapering, loose-fitting top. */

@@ -3,7 +3,7 @@ import { memo, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { canvasProps } from "./canvas";
 import { BADGE_ASPECT, makeBadgeTexture, makeGlowTexture } from "./textures";
-import { HijabDrape, HijabiHead, Torso, placeLimb, useCharacterMaterials, type CharacterMats } from "./Hijabi";
+import { Headphones, HijabDrape, HijabiHead, Torso, placeLimb, useCharacterMaterials, type CharacterMats } from "./Hijabi";
 import { smooth, lerp } from "./shared";
 
 /**
@@ -447,6 +447,7 @@ function Scene({ slugs, onHit }: { slugs: readonly string[]; onHit: (i: number) 
       <group ref={archer} position={[-L.spread, L.y, 0]} rotation={[0, 0.22, 0]} scale={L.scale}>
         <Torso mats={mats} />
         <HijabDrape mats={mats} />
+        <Headphones mats={mats} />
         <HijabiHead ref={head} eyes={eyes} mats={mats} />
         <Arm mats={mats} segs={armL} elbow={ELBOW_L} />
         <Arm mats={mats} segs={armR} elbowRef={elbowR} />

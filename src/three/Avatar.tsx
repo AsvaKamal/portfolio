@@ -2,7 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { pointer, stage, smooth, lerp, screen, typing } from "./shared";
-import { HijabDrape, HijabiHead, Limb, Torso, useCharacterMaterials, type CharacterMats } from "./Hijabi";
+import { Headphones, HijabDrape, HijabiHead, Limb, Torso, useCharacterMaterials, type CharacterMats } from "./Hijabi";
 import { makeGlowTexture } from "./textures";
 
 const ACCENT = new THREE.Color("#d4a066");
@@ -37,8 +37,8 @@ function useHeadFollow(head: React.RefObject<THREE.Object3D | null>) {
 function useMaterials() {
   return useMemo(
     () => ({
-      lid: new THREE.MeshStandardMaterial({ color: "#8a6a4e", roughness: 0.35, metalness: 0.75 }),
-      logo: new THREE.MeshBasicMaterial({ color: "#f1e2c8" }),
+      lid: new THREE.MeshStandardMaterial({ color: "#d3d6db", roughness: 0.38, metalness: 0.35 }),
+      logo: new THREE.MeshBasicMaterial({ color: "#f4f6f8" }),
       desk: new THREE.MeshStandardMaterial({ color: "#3a2a1f", roughness: 0.5, metalness: 0.05 }),
       mat: new THREE.MeshStandardMaterial({ color: "#1c140f", roughness: 0.95 }),
       bezel: new THREE.MeshStandardMaterial({ color: "#2e231b", roughness: 0.45, metalness: 0.55, side: THREE.DoubleSide }),
@@ -115,15 +115,35 @@ function ProceduralAvatar({ mats }: { mats: CharacterMats }) {
         </group>
       ))}
       <HijabDrape mats={mats} />
+      <Headphones mats={mats} />
       <HijabiHead ref={head} eyes={eyes} mats={mats} />
     </group>
   );
+}
+
+/** A square JavaScript sticker: yellow, with "JS" in the bottom-right corner. */
+function makeJsSticker() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 128;
+  const g = c.getContext("2d")!;
+  g.fillStyle = "#f0db4f";
+  g.fillRect(0, 0, 128, 128);
+  g.fillStyle = "#1b1b1b";
+  g.font = "800 58px system-ui, sans-serif";
+  g.textAlign = "right";
+  g.textBaseline = "alphabetic";
+  g.fillText("JS", 118, 116);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
 }
 
 /** Hero prop: back of a laptop lid facing the viewer. Shrinks away as the desk scene takes over. */
 function Laptop({ mats }: { mats: Mats }) {
   const ref = useRef<THREE.Group>(null);
   const light = useRef<THREE.PointLight>(null);
+  const sticker = useMemo(makeJsSticker, []);
+  useEffect(() => () => sticker.dispose(), [sticker]);
   useFrame(() => {
     if (!ref.current) return;
     const s = 1 - smooth(0.05, 0.4, stage.p);
@@ -146,6 +166,10 @@ function Laptop({ mats }: { mats: Mats }) {
         </mesh>
         <mesh material={mats.logo} position={[0, 0.44, 0.022]}>
           <circleGeometry args={[0.06, 24]} />
+        </mesh>
+        <mesh position={[0.4, 0.18, 0.022]} rotation={[0, 0, -0.12]}>
+          <planeGeometry args={[0.2, 0.2]} />
+          <meshStandardMaterial map={sticker} roughness={0.6} />
         </mesh>
       </group>
     </group>
